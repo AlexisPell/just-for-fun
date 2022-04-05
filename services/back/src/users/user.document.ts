@@ -19,7 +19,7 @@ export class User extends Document {
     example: true,
   })
   @Prop({ type: Boolean, default: false })
-  locallyVerified: boolean;
+  verified: boolean;
 
   @ApiProperty({ description: 'google account id' })
   @Prop({ type: String, unique: true, sparse: true }) // sparse to let uniqie while null

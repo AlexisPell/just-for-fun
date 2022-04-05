@@ -19,19 +19,20 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { Request, Response } from 'express';
 import { LocalAuthGuard } from './guards/local.guard';
 import { UserResDTO } from 'src/users/dto/responses/user-res.dto';
+import { GoogleAuthGuard } from './guards/google.guard';
+import { ConfigService } from 'src/config/config.service';
 
 @ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private configService: ConfigService,
   ) {}
 
   @ApiOperation({ summary: 'Get me, if logged in' })
   @ApiOkResponse({ type: User, description: 'User' })
   @Get('me')
-  // @UseGuards(AuthGuard)
   status(@Req() req: Request) {
     console.log(`\nREQUEST USER: ${JSON.stringify(req.user, null, 2)}`);
     console.log('\nREQUEST SESSION:', (req as any).session);
@@ -51,6 +52,19 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   login(@Res() res: Response) {
     res.redirect(`me`);
+  }
+
+  @Get('/google/login')
+  @UseGuards(GoogleAuthGuard)
+  googleLogin() {
+    return;
+  }
+
+  @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  googleRedirect(@Res() res: any) {
+    // res.redirect(`${process.env.WEB_URL}`);
+    res.redirect(`${this.configService.serverApiEndpoint}/auth/me`);
   }
 
   @Get('logout')

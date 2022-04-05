@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
+import { Profile as GoogleProfile } from 'passport-google-oauth20';
 
 @Injectable()
 export class AuthService {
@@ -43,5 +44,19 @@ export class AuthService {
     if (!passwordsEqual)
       throw new BadRequestException('Wrong password provided');
     return undefined;
+  }
+
+  async validateGoogleProfile(userDto: GoogleProfile): Promise<User> {
+    console.log(`VALIDATE GOOGLE / INIT ${JSON.stringify(userDto, null, 2)}`);
+    const user = await this.userModel.findOne({ googleId: userDto.id });
+    if (user) {
+      console.log(
+        `VALIDATE GOOGLE / USER FOUND ${JSON.stringify(user, null, 2)}`,
+      );
+      return user;
+    }
+    const newUser = await this.usersService.createForGoogleStrategy(userDto);
+    console.log(`VALIDATE GOOGLE / NEW USER ${JSON.stringify(user, null, 2)}`);
+    return newUser;
   }
 }

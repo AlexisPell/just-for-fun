@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from './config/config.module';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   controllers: [AppController],
   imports: [
-    ConfigModule,
-    AuthModule,
-    UsersModule,
     PassportModule.register({ session: true }),
     MongooseModule.forRootAsync({
       useFactory: async () => ({
@@ -20,6 +17,9 @@ import { PassportModule } from '@nestjs/passport';
         useUnifiedTopology: true,
       }),
     }),
+    ConfigModule,
+    AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
