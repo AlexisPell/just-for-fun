@@ -1,10 +1,12 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -17,6 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { User } from './user.document';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserResDTO } from './dto/responses/user-res.dto';
+import { UsersResDTO } from './dto/responses/users-res.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -32,15 +36,23 @@ export class UsersController {
     type: CreateUserDto,
   })
   @Post()
-  createUser(@Body() dto: CreateUserDto) {
-    return this.usersService.createUser(dto);
+  async createUser(@Body() dto: CreateUserDto) {
+    return new UserResDTO(
+      (await this.usersService.createUser(dto)) as UserResDTO,
+    );
   }
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [User], description: 'User' })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  getUsers() {
-    return this.usersService.getUsers();
+  async getUsers() {
+    const users = await this.usersService.getUsers();
+
+    const rsp = new UsersResDTO();
+    rsp.users = users as any;
+
+    return rsp;
   }
 
   @ApiOperation({ summary: 'Get user by email or id' })
@@ -55,10 +67,17 @@ export class UsersController {
     type: String,
     required: false,
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('find-by')
-  getUser(@Query('email') email: string, @Query('id') id: string) {
-    if (email) return this.usersService.getUserByEmail(email);
-    if (id) return this.usersService.getUserById(id);
+  async getUser(@Query('email') email: string, @Query('id') id: string) {
+    if (email)
+      return new UserResDTO(
+        (await this.usersService.getUserByEmail(email)) as UserResDTO,
+      );
+    if (id)
+      return new UserResDTO(
+        (await this.usersService.getUserById(id)) as UserResDTO,
+      );
     throw new BadRequestException('No search query param defined');
   }
 }

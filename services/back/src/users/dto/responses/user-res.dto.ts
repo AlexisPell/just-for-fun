@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Exclude } from 'class-transformer';
-import { CreateUserDto } from '../create-user.dto';
 
 export class UserResDTO {
   @ApiProperty({ name: 'id' })
@@ -11,7 +10,7 @@ export class UserResDTO {
   @Exclude()
   password: string;
 
-  constructor(userDTO: CreateUserDto) {
-    Object.assign(this, userDTO);
+  constructor(partial: UserResDTO) {
+    Object.assign(this, partial);
   }
 }

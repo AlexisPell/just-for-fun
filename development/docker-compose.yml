@@ -1,23 +1,22 @@
 version: '3.7'
 
 services:
-  # TODO: no web yet
-  # # WEB
-  # web:
-  #   container_name: web
-  #   build:
-  #     context: ./../services/web
-  #     dockerfile: docker/Dockerfile.dev
-  #   ports:
-  #     - '3000:3000'
-  #     - '49153:49153'
-  #   networks:
-  #     - webnetwork
-  #   restart: always
-  #   volumes:
-  #     - ./../services/web:/app
-  #     - /app/node_modules
-  #     - /app/.next
+  # WEB
+  web:
+    container_name: web
+    build:
+      context: ./../services/web
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - '3000:3000'
+      - '49153:49153'
+    networks:
+      - webnetwork
+    restart: always
+    volumes:
+      - ./../services/web:/app
+      # - /app/node_modules
+      - /app/.next
 
   # REDIS
   redis:
@@ -69,7 +68,7 @@ services:
     depends_on:
       - proxy
       - mongo
-      # - redis
+      - redis
 
 networks:
   webnetwork:

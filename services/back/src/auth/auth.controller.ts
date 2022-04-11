@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
@@ -7,6 +8,7 @@ import {
   Res,
   UnauthorizedException,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -32,13 +34,15 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Get me, if logged in' })
   @ApiOkResponse({ type: User, description: 'User' })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('me')
   status(@Req() req: Request) {
     console.log(`\nREQUEST USER: ${JSON.stringify(req.user, null, 2)}`);
     console.log('\nREQUEST SESSION:', (req as any).session);
     console.log('\nREQUEST COOKIE:', (req as any).cookies);
     if (!req.user) throw new UnauthorizedException('Unauthorized to get me');
-    return new UserResDTO(req.user as CreateUserDto);
+    console.log('RES USER DTO', new UserResDTO(req.user as any));
+    return new UserResDTO(req.user as any);
   }
 
   @Post('register')

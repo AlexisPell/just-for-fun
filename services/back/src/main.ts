@@ -18,6 +18,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix(process.env.API_PREFIX);
 
+  app.enableCors({
+    origin: (origin, cb) => {
+      cb(null, true);
+    },
+    methods: 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',
+    credentials: true,
+  });
+
   // Documentation
   const config = new DocumentBuilder()
     .setTitle('Default template swagger')
@@ -29,7 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup(`${process.env.API_PREFIX}/docs`, app, document);
 
   // Middlewares
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector), {
       enableCircularCheck: true,
