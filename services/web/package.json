@@ -16,7 +16,9 @@
     "next": "12.1.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "react-hook-form": "^7.29.0"
+    "react-hook-form": "^7.29.0",
+    "socket.io-client": "^4.4.1",
+    "use-local-storage-state": "^17.0.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.181",

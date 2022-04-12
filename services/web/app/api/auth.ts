@@ -33,7 +33,7 @@ const login = async ({
     return res.data;
   } catch (error) {
     console.error('🚀 ~ file: auth.ts ~ authApi.login ~ error', getAxiosErrorResponse(error));
-    return null;
+    return getAxiosErrorResponse(error);
   }
 };
 
@@ -43,25 +43,12 @@ const getMe = async () => {
     return res.data;
   } catch (error) {
     console.error('🚀 ~ file: auth.ts ~ authApi.getMe ~ error', getAxiosErrorResponse(error));
-    return null;
+    return getAxiosErrorResponse(error);
   }
 };
-
-// const registerAtom = atom(
-//   async (get) => {
-//   try {
-//     const res = await axios.post(environment.BACKEND_API, { email, password });
-//     return res.data
-//   } catch (error) {
-//     console.log('🚀 ~ file: auth.ts ~ line 11 ~ authApi.register= ~ error', error);
-//     return null;
-//   }
-//   }
-// )
 
 export const authApi = {
   register,
   login,
   getMe,
-  // registerAtom
 };

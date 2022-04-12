@@ -4,11 +4,13 @@ import Head from 'next/head';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { authApi } from '../app/api/auth';
 import { useState } from 'react';
-import { storageService } from '../app/services/storage';
+import { useLocalStoreUser } from '../app/hooks/useLocalStoreUser';
 
 interface LoginPageProps {}
 const LoginPage: NextPage<LoginPageProps> = () => {
+  const [user, setUser] = useLocalStoreUser();
   const router = useRouter();
+
   type IFieldValues = { email: string; password: string };
   const {
     register,
@@ -22,8 +24,10 @@ const LoginPage: NextPage<LoginPageProps> = () => {
     if ((user as any)?.status) {
       return setError((user as any).data.message);
     }
-    storageService.local.setItem(storageService.storageKeys.user, user);
-    return router.push('dashboard');
+    if (user) {
+      setUser(user);
+      return router.push('dashboard');
+    }
   };
 
   return (

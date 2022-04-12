@@ -3,7 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { storageService } from '../app/services/storage';
+import { useLocalStoreUser } from '../app/hooks/useLocalStoreUser';
+import { SocketClient } from '../app/services/ws';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
@@ -13,13 +14,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 interface DashboardPageProps {}
 const DashboardPage: NextPage<DashboardPageProps> = () => {
+  useAuthentication();
+
   useEffect(() => {
-    // if (typeof window !== 'undefined') {
-    //   console.log(
-    //     'MY USER FROM LOCALSTORAGE:',
-    //     storageService.local.getItem(storageService.storageKeys.user)
-    //   );
-    // }
+    const socket = new SocketClient();
   }, []);
 
   return (
@@ -33,3 +31,12 @@ const DashboardPage: NextPage<DashboardPageProps> = () => {
 };
 
 export default DashboardPage;
+
+function useAuthentication() {
+  const [user, setUser] = useLocalStoreUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) router.replace('login');
+  }, [user]);
+}

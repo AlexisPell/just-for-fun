@@ -19,6 +19,12 @@ module.exports = (phase) => {
       if (isStaging) return 'NOT DEFINED YET';
       return 'process.env.API IS NOT DEFINED...';
     })(),
+    BACKEND_URI: (() => {
+      if (isDev) return 'http://localhost:8080';
+      if (isProd) return 'NOT DEFINED YET';
+      if (isStaging) return 'NOT DEFINED YET';
+      return 'process.env.API IS NOT DEFINED...';
+    })(),
   };
 
   return {

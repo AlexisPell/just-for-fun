@@ -3,11 +3,12 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { authApi } from '../app/api/auth';
-import { storageService } from '../app/services/storage';
 import { useState } from 'react';
+import { useLocalStoreUser } from '../app/hooks/useLocalStoreUser';
 
 interface RegisterPageProps {}
 const RegisterPage: NextPage<RegisterPageProps> = () => {
+  const [user, setUser] = useLocalStoreUser();
   const router = useRouter();
   type IFieldValues = { email: string; password: string };
   const {
@@ -22,8 +23,10 @@ const RegisterPage: NextPage<RegisterPageProps> = () => {
     if ((user as any)?.status) {
       return setError((user as any).data.message);
     }
-    storageService.local.setItem(storageService.storageKeys.user, user);
-    return router.push('dashboard');
+    if (user) {
+      setUser(user);
+      return router.push('dashboard');
+    }
   };
 
   return (

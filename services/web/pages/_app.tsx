@@ -1,8 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Provider } from 'jotai';
+import { Provider, useAtom } from 'jotai';
 import { axiosSetup } from '../app/services/axiosSetup';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 axiosSetup();
 

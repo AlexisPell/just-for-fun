@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   controllers: [AppController],
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule,
     AuthModule,
     UsersModule,
+    ChatsModule,
   ],
 })
 export class AppModule {}
