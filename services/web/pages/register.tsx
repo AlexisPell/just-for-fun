@@ -1,48 +1,29 @@
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import axios from 'axios';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { authApi } from '../app/api/auth';
+import { storageService } from '../app/services/storage';
+import { useState } from 'react';
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  console.log('Back Vars:', process.env.BACKEND_API);
-
-  console.log('PATH URL', `${process.env.BACKEND_API}/auth/me`);
-  let me = null;
-  try {
-    // let url = `${process.env.BACKEND_API}/auth/me`
-    let url = 'http://localhost:5000/api/v1/auth/me';
-    // me = await axios.get(url);
-    me = await fetch(url).then((r) => r.json());
-    console.log(
-      '🚀 ~ file: register.tsx ~ line 10 ~ constgetServerSideProps:GetServerSideProps= ~ me',
-      me
-    );
-  } catch (error) {
-    console.log(
-      '🚀 ~ file: register.tsx ~ line 17 ~ constgetServerSideProps:GetServerSideProps= ~ error',
-      error
-    );
-  }
-
-  return {
-    props: { me },
-  };
-};
-
-interface RegisterPageProps {
-  me: any;
-}
-const RegisterPage: NextPage<RegisterPageProps> = ({ me }) => {
-  console.log('🚀 ~ file: register.tsx ~ line 68 ~ me', me);
+interface RegisterPageProps {}
+const RegisterPage: NextPage<RegisterPageProps> = () => {
+  const router = useRouter();
   type IFieldValues = { email: string; password: string };
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFieldValues>();
+  const [error, setError] = useState('');
 
-  const onHandleValid: SubmitHandler<IFieldValues> = (data) => {
-    console.log('Data:', data);
+  const onHandleValid: SubmitHandler<IFieldValues> = async (data) => {
+    const user = await authApi.register(data);
+    if ((user as any)?.status) {
+      return setError((user as any).data.message);
+    }
+    storageService.local.setItem(storageService.storageKeys.user, user);
+    return router.push('dashboard');
   };
 
   return (
@@ -77,6 +58,13 @@ const RegisterPage: NextPage<RegisterPageProps> = ({ me }) => {
           <button className='btn' type='submit'>
             Register
           </button>
+          <p className='text-red-500'>{error}</p>
+          <div
+            className='text-gray-700 text-sm w-full text-right pr-6 cursor-pointer'
+            onClick={() => router.push('login')}
+          >
+            Already have an account? <span className='underline'>Sign in</span>
+          </div>
         </form>
       </div>
     </>

@@ -72,3 +72,4 @@ services:
 
 networks:
   webnetwork:
+    external: true
