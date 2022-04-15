@@ -1,5 +1,5 @@
 export interface AppConfig {
-  PROXY_API: string;
+  WEB_API: string;
   BACK_API: string;
   BACK_PORT: number;
   API_PREFIX: string;

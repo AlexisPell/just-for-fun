@@ -14,13 +14,13 @@ module.exports = (phase) => {
 
   const env = {
     BACKEND_API: (() => {
-      if (isDev) return 'http://localhost:8080/api/v1';
+      if (isDev) return 'http://localhost:5000';
       if (isProd) return 'NOT DEFINED YET';
       if (isStaging) return 'NOT DEFINED YET';
       return 'process.env.API IS NOT DEFINED...';
     })(),
-    BACKEND_URI: (() => {
-      if (isDev) return 'http://localhost:8080';
+    BACKEND_ENDPOINT: (() => {
+      if (isDev) return 'http://localhost:5000/api/v1';
       if (isProd) return 'NOT DEFINED YET';
       if (isStaging) return 'NOT DEFINED YET';
       return 'process.env.API IS NOT DEFINED...';

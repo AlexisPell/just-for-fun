@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IUser } from '../interfaces/user';
-import { getAxiosErrorResponse } from '../utils/getAxiosErrorResponse';
+import { getAxiosErrorResponse, IHttpErrorResponse } from '../utils/getAxiosErrorResponse';
 
 const register = async ({
   email,
@@ -8,7 +8,7 @@ const register = async ({
 }: {
   email: string;
   password: string;
-}): Promise<IUser | null> => {
+}): Promise<IUser | IHttpErrorResponse> => {
   try {
     const res = await axios.post(`/auth/register`, { email, password });
     return res.data;
@@ -27,7 +27,7 @@ const login = async ({
 }: {
   email: string;
   password: string;
-}): Promise<IUser | null> => {
+}): Promise<IUser | IHttpErrorResponse> => {
   try {
     const res = await axios.post(`/auth/login`, { email, password });
     return res.data;
@@ -37,10 +37,10 @@ const login = async ({
   }
 };
 
-const getMe = async () => {
+const getMe = async (): Promise<IUser | IHttpErrorResponse> => {
   try {
     const res = await axios.get(`/auth/me`);
-    return res.data;
+    return res.data as IUser;
   } catch (error) {
     console.error('🚀 ~ file: auth.ts ~ authApi.getMe ~ error', getAxiosErrorResponse(error));
     return getAxiosErrorResponse(error);

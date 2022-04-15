@@ -18,6 +18,7 @@ const DashboardPage: NextPage<DashboardPageProps> = () => {
 
   useEffect(() => {
     const socket = new SocketClient();
+    socket.getMessage();
   }, []);
 
   return (

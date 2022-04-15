@@ -67,8 +67,8 @@ export class AuthController {
   @Get('/google/redirect')
   @UseGuards(GoogleAuthGuard)
   googleRedirect(@Res() res: any) {
-    // res.redirect(`${process.env.WEB_URL}`);
-    res.redirect(`${this.configService.serverApiEndpoint}/auth/me`);
+    res.redirect(`${this.configService.webApi}/oauth-redirect`);
+    // res.redirect(`${this.configService.serverApiEndpoint}/auth/me`);
   }
 
   @Get('logout')

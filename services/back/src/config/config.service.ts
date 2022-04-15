@@ -6,18 +6,18 @@ import { AppConfig } from './config.interface';
 export class ConfigService {
   constructor(private readonly _configService: _ConfigService<AppConfig>) {}
 
+  get webApi() {
+    return this._configService.get('WEB_API');
+  }
+
   get serverApi() {
-    return this._configService.get('PROXY_API');
+    return this._configService.get('BACK_API');
   }
 
   get serverApiEndpoint() {
-    return `${this._configService.get('PROXY_API')}/${this._configService.get(
+    return `${this._configService.get('BACK_API')}/${this._configService.get(
       'API_PREFIX',
     )}`;
-  }
-
-  get backApiEndpoint() {
-    return this._configService.get('BACK_API');
   }
 
   get port(): number {
@@ -39,22 +39,6 @@ export class ConfigService {
   get mongoDbApi() {
     return this._configService.get('MONGO_DB');
   }
-
-  // get smtpHost() {
-  //   return this._configService.get('SMTP_HOST');
-  // }
-
-  // get smtpPort() {
-  //   return Number(this._configService.get('SMTP_PORT'));
-  // }
-
-  // get smtpEmail() {
-  //   return this._configService.get('SMTP_EMAIL');
-  // }
-
-  // get smtpPassword() {
-  //   return this._configService.get('SMTP_PASSWORD');
-  // }
 
   get googleClientId() {
     return this._configService.get('GOOGLE_CLIENT_ID');
