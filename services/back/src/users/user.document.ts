@@ -1,6 +1,8 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Room } from 'src/chats/documents/room.document';
 
 export type UserDocument = User & Document;
 
@@ -24,6 +26,10 @@ export class User extends Document {
   @ApiProperty({ description: 'google account id' })
   @Prop({ type: String, unique: true, sparse: true }) // sparse to let uniqie while null
   googleId: string;
+
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Room' }] })
+  @Type(() => Room)
+  rooms: Room;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

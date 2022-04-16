@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
-import { IUser } from '../interfaces/user';
+import { IRoom } from '../interfaces/room';
 
-export const userAtom = atom<IUser | null>(null);
+export const roomsAtom = atom<IRoom[]>([]);
 
 // USESTATE ANALOG
 // const _registerErrorAtom = atom('');

@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
+import { IUser } from './user.interface';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: string): Promise<IUser> {
     let user;
     try {
       // user = await (await this.userModel.findById(id)).toJSON();
