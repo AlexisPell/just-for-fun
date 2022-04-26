@@ -11,3 +11,6 @@ REST:
 1. Files upload
 2. Profiles
 3. Chats
+
+// // // // // // //
+Work on rooms list response

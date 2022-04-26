@@ -22,6 +22,7 @@ const DashboardPage: NextPage<DashboardPageProps> = () => {
   useAuthentication();
 
   const [rooms, setRooms] = useAtom(roomsAtom);
+  console.log('🚀 ~ file: dashboard.tsx ~ line 25 ~ rooms', rooms);
 
   useEffect(() => {
     socket = new SocketClient();
@@ -47,7 +48,7 @@ const DashboardPage: NextPage<DashboardPageProps> = () => {
         </button>
         <div>My chats:</div>
         <div>
-          {rooms.map((room) => (
+          {/* {rooms.map((room) => (
             <div key={room.id} className='border-2 my-2 mx-10 p-3 text-lg'>
               <p>
                 <strong>Room name: </strong> {room.name}
@@ -69,7 +70,7 @@ const DashboardPage: NextPage<DashboardPageProps> = () => {
                 {JSON.stringify(room.users![0])}
               </p>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </>

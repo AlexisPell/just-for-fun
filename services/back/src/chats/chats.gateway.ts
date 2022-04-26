@@ -7,11 +7,15 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import {} from '@nestjs/swagger';
 import { Socket } from 'socket.io';
 import { UsersService } from 'src/users/users.service';
 import { wsMsgs } from './chats.constants';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { IRoom } from './interfaces/room';
+
+import { plainToInstance } from 'class-transformer';
+import { RoomResDto } from './dto/res/rooms-res.dto';
 
 @WebSocketGateway({
   cors: {
@@ -38,13 +42,12 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log('ON CONNECT');
       const { userId } = socket.handshake.auth;
       const user = await this.usersService.getUserById(userId);
-      console.log(
-        '🚀 ~ file: chats.gateway.ts ~ handleConnection ~ User: ',
-        user,
-      );
+      console.log('🚀 handleConnection ~ User: ', user);
 
+      // Set user to data of socket's current connection
       socket.data.user = user;
 
+      this.server.emit(wsMsgs.message, 'Connected successfully');
       // // CREATE ROOM DUMB
       // const room = await this.roomsService.createRoom(
       //   { name: '2nd room', description: 'my 2nd room' },
@@ -56,15 +59,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // );
 
       const rooms = await this.roomsService.getRoomsForUser(user._id);
-      console.log(
-        '🚀 ~ file: chats.gateway.ts ~ handleConnection ~ rooms: ',
-        rooms,
-      );
-
-      this.server.emit(wsMsgs.message, 'Connected successfully');
+      const roomsResDto = plainToInstance(RoomResDto, rooms);
 
       // Only emit rooms to the specific connected client
-      this.server.to(socket.id).emit(wsMsgs.rooms, rooms);
+      this.server.to(socket.id).emit(wsMsgs.rooms, roomsResDto);
     } catch (error) {
       console.log('ERROR', error);
       this.handleDisconnect(socket);
