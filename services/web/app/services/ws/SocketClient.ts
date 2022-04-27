@@ -29,7 +29,4 @@ export class SocketClient {
   createRoom(room: IRoom, callback?: (newRoom: IRoom) => any) {
     return this.socket.emit(wsMsgs.createRoom, room, callback);
   }
-  // createRoom(callback: (room: IRoom) => any) {
-  //   return this.socket.on(wsMsgs.createRoom, callback);
-  // }
 }

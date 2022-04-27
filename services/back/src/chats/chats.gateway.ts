@@ -16,6 +16,8 @@ import { IRoom } from './interfaces/room';
 
 import { plainToInstance } from 'class-transformer';
 import { RoomResDto } from './dto/res/rooms-res.dto';
+import { Model, LeanDocument } from 'mongoose';
+import { Room } from './documents/room.document';
 
 @WebSocketGateway({
   cors: {
@@ -64,7 +66,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // Only emit rooms to the specific connected client
       this.server.to(socket.id).emit(wsMsgs.rooms, roomsResDto);
     } catch (error) {
-      console.log('ERROR', error);
+      console.log('MY ERROR:', error);
       this.handleDisconnect(socket);
     }
   }
@@ -85,7 +87,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage(wsMsgs.createRoom)
-  async onCreateRoom(socket: Socket, room: CreateRoomDto): Promise<IRoom> {
+  async onCreateRoom(
+    socket: Socket,
+    room: CreateRoomDto,
+  ): Promise<LeanDocument<Room>> {
     return this.roomsService.createRoom(room, socket.data.user._id);
   }
 }

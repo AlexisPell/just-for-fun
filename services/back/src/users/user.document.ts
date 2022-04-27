@@ -29,7 +29,7 @@ export class User extends Document {
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Room' }] })
   @Type(() => Room)
-  rooms: Room;
+  rooms: Room[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
