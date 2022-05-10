@@ -62,5 +62,7 @@ describe('users.controller', () => {
         expect(user).toEqual(userStub());
       });
     });
+
+    // Get
   });
 });
