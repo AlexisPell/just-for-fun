@@ -20,7 +20,6 @@ import {
 import { User } from './user.document';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResDTO } from './dto/responses/user-res.dto';
-import { UsersResDTO } from './dto/responses/users-res.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -37,9 +36,7 @@ export class UsersController {
   })
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
-    return new UserResDTO(
-      (await this.usersService.createUser(dto)) as UserResDTO,
-    );
+    return new UserResDTO((await this.usersService.createUser(dto)) as any);
   }
 
   @ApiOperation({ summary: 'Get all users' })
@@ -49,10 +46,8 @@ export class UsersController {
   async getUsers() {
     const users = await this.usersService.getUsers();
 
-    const rsp = new UsersResDTO();
-    rsp.users = users as any;
-
-    return rsp;
+    const usersRes = users.map((u) => new UserResDTO(u as any));
+    return usersRes;
   }
 
   @ApiOperation({ summary: 'Get user by email or id' })
@@ -67,17 +62,15 @@ export class UsersController {
     type: String,
     required: false,
   })
-  @UseInterceptors(ClassSerializerInterceptor)
+  // @UseInterceptors(ClassSerializerInterceptor)
   @Get('find-by')
   async getUser(@Query('email') email: string, @Query('id') id: string) {
     if (email)
       return new UserResDTO(
-        (await this.usersService.getUserByEmail(email)) as UserResDTO,
+        (await this.usersService.getUserByEmail(email)) as any,
       );
     if (id)
-      return new UserResDTO(
-        (await this.usersService.getUserById(id)) as UserResDTO,
-      );
+      return new UserResDTO((await this.usersService.getUserById(id)) as any);
     throw new BadRequestException('No search query param defined');
   }
 }

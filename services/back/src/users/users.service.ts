@@ -15,12 +15,18 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getUsers(): Promise<User[]> {
-    const users: User[] = await this.userModel.find().lean();
+    const users: User[] = await this.userModel
+      .find()
+      // .populate('rooms')
+      .lean();
     return users;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const user: User = await this.userModel.findOne({ email }).lean();
+    const user: User = await this.userModel
+      .findOne({ email })
+      .populate('rooms')
+      .lean();
     if (!user)
       throw new NotFoundException("User with such email doesn't exist");
     return user;
@@ -32,7 +38,10 @@ export class UsersService {
       // user = await (await this.userModel.findById(id)).toJSON();
       // user = await (await this.userModel.findById(id)).toObject();
       // user = await this.userModel.findById(id).lean().exec();
-      user = await this.userModel.findById(id).lean();
+      user = await this.userModel
+        .findById(id)
+        // .populate('rooms')
+        .lean();
     } catch (error) {
       throw new BadRequestException('Invalid mongoose id');
     }
