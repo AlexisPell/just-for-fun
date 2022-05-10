@@ -14,3 +14,5 @@ EXPOSE 8080
 
 # Launch NGINX
 CMD [ "nginx", "-g", "daemon off;" ]
+
+# ))
